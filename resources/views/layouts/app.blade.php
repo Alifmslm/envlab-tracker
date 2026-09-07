@@ -98,21 +98,43 @@
             </div>
         @endisset
 
-        <!-- Flash -->
-        @if (session('success'))
-            <div id="alert-success" class="mx-4 mt-4 flex items-center gap-3 rounded-lg border border-brand/40 bg-brand/10 px-4 py-3 text-sm font-medium text-emerald-800 sm:mx-8" role="alert">
-                <x-heroicon-o-check-circle class="h-5 w-5 shrink-0" />
-                <span>{{ session('success') }}</span>
-                <button type="button" class="ms-auto rounded-lg p-1 transition hover:bg-brand/20" data-dismiss-alert aria-label="Tutup">
-                    <x-heroicon-o-x-mark class="h-4 w-4" />
-                </button>
-            </div>
-        @endif
-        @if (session('status'))
-            <div class="mx-4 mt-4 rounded-lg border border-royal/20 bg-royal/5 px-4 py-3 text-sm font-medium text-royal sm:mx-8" role="alert">
-                {{ session('status') }}
-            </div>
-        @endif
+        <!-- Toasts -->
+        <div id="toast-container" class="pointer-events-none fixed bottom-4 right-4 z-[70] flex w-[calc(100%-2rem)] max-w-sm flex-col gap-2">
+            @if (session('success'))
+                <div class="pointer-events-auto flex items-start gap-3 rounded-lg border border-brand/40 bg-white px-4 py-3" role="alert" data-toast data-toast-timeout="4500">
+                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand/15 text-emerald-700">
+                        <x-heroicon-o-check-circle class="h-5 w-5" />
+                    </span>
+                    <div class="min-w-0 flex-1">
+                        <p class="text-sm font-bold text-slate-800">Berhasil</p>
+                        <p class="mt-0.5 text-xs text-slate-500">{{ session('success') }}</p>
+                        <div class="mt-2 h-1 overflow-hidden rounded-full bg-slate-100">
+                            <div class="toast-progress h-full w-full origin-left rounded-full bg-brand"></div>
+                        </div>
+                    </div>
+                    <button type="button" class="rounded-lg p-1 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600" data-dismiss-alert aria-label="Tutup">
+                        <x-heroicon-o-x-mark class="h-4 w-4" />
+                    </button>
+                </div>
+            @endif
+            @if (session('status'))
+                <div class="pointer-events-auto flex items-start gap-3 rounded-lg border border-royal/30 bg-white px-4 py-3" role="alert" data-toast data-toast-timeout="4500">
+                    <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-royal/10 text-royal">
+                        <x-heroicon-o-information-circle class="h-5 w-5" />
+                    </span>
+                    <div class="min-w-0 flex-1">
+                        <p class="text-sm font-bold text-slate-800">Info</p>
+                        <p class="mt-0.5 text-xs text-slate-500">{{ session('status') }}</p>
+                        <div class="mt-2 h-1 overflow-hidden rounded-full bg-slate-100">
+                            <div class="toast-progress h-full w-full origin-left rounded-full bg-royal"></div>
+                        </div>
+                    </div>
+                    <button type="button" class="rounded-lg p-1 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600" data-dismiss-alert aria-label="Tutup">
+                        <x-heroicon-o-x-mark class="h-4 w-4" />
+                    </button>
+                </div>
+            @endif
+        </div>
 
         <!-- Content -->
         <main class="flex-1 px-4 py-6 sm:px-8">

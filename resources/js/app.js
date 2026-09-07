@@ -67,3 +67,25 @@ document.addEventListener('keydown', (event) => {
             .forEach(closeModalEl);
     }
 });
+
+// Toasts: slide in on load, auto-fade after data-toast-timeout ms with a
+// shrinking progress bar. Manual close via [data-dismiss-alert] still works.
+document.querySelectorAll('[data-toast]').forEach((toast) => {
+    const timeout = parseInt(toast.getAttribute('data-toast-timeout') || '4500', 10);
+
+    const bar = toast.querySelector('.toast-progress');
+    if (bar) bar.style.animationDuration = `${timeout}ms`;
+
+    // Entrance: hide first (before first paint), then reveal for a slide-up.
+    toast.classList.add('transition-all', 'duration-300', 'opacity-0', 'translate-y-3');
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+        toast.classList.remove('opacity-0', 'translate-y-3');
+    }));
+
+    const timer = setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-3');
+        setTimeout(() => toast.remove(), 350);
+    }, timeout);
+
+    toast.querySelector('[data-dismiss-alert]')?.addEventListener('click', () => clearTimeout(timer));
+});
