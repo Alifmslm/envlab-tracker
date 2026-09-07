@@ -12,3 +12,25 @@
     --color-royal: #494ca0;
     --color-royal-dark: #3a3e85;
 }
+
+/* Toast lifetime progress bar (duration set inline from data-toast-timeout). */
+@keyframes toast-progress-shrink {
+    from {
+        transform: scaleX(1);
+    }
+    to {
+        transform: scaleX(0);
+    }
+}
+
+.toast-progress {
+    animation-name: toast-progress-shrink;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .toast-progress {
+        animation: none;
+    }
+}
