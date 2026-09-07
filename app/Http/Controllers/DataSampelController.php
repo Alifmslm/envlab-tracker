@@ -26,12 +26,15 @@ class DataSampelController extends Controller
     public function dashboard(Request $request)
     {
         $summary = $this->getDashboardSummary();
+        $recentSampels = DataSampel::latest()->take(8)->get();
 
         if ($request->expectsJson()) {
-            return response()->json($summary);
+            return response()->json(array_merge($summary, [
+                'recent' => $recentSampels,
+            ]));
         }
 
-        return view('dashboard', $summary);
+        return view('dashboard', array_merge($summary, compact('recentSampels')));
     }
 
     /**
