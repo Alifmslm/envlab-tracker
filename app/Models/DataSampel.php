@@ -19,4 +19,11 @@ class DataSampel extends Model
         'status_uji',
         'catatan_kondisi',
     ];
+
+    protected function casts(): array {
+        return [
+            'jumlah_titik' => 'integer',
+            'biaya_per_titik' => 'integer',
+        ];
+    }
 }
