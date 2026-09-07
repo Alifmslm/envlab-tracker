@@ -9,4 +9,14 @@ class DataSampel extends Model
 {
     /** @use HasFactory<\Database\Factories\DataSampelFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'kode_sampel',
+        'nama_sampel',
+        'jenis_sampel',
+        'jumlah_titik',
+        'biaya_per_titik',
+        'status_uji',
+        'catatan_kondisi',
+    ];
 }
