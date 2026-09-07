@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'EnvLab Tracker')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -11,7 +12,7 @@
     <!-- Sidebar -->
     <aside class="hidden w-64 shrink-0 flex-col bg-royal text-white md:flex">
         <div class="flex items-center gap-3 px-6 py-6">
-            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-brand font-bold text-royal-dark">EL</div>
+            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-brand font-bold text-white">EL</div>
             <div>
                 <p class="text-sm font-bold leading-tight">EnvLab</p>
                 <p class="text-xs text-white/70">Tracker</p>
@@ -24,7 +25,7 @@
             @endphp
             <a href="{{ route('dashboard') }}"
                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition {{ $isDashboard ? 'bg-white/15 text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg transition {{ $isDashboard ? 'bg-brand text-royal-dark' : 'bg-white/10 text-white/70' }}">
+                <span class="flex h-9 w-9 items-center justify-center rounded-lg transition {{ $isDashboard ? 'bg-brand text-white' : 'bg-white/10 text-white/70' }}">
                     <x-heroicon-o-squares-2x2 class="h-5 w-5" />
                 </span>
                 <span>Dashboard</span>
@@ -34,7 +35,7 @@
             </a>
             <a href="{{ route('data-sampels.index') }}"
                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition {{ $isData ? 'bg-white/15 text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg transition {{ $isData ? 'bg-brand text-royal-dark' : 'bg-white/10 text-white/70' }}">
+                <span class="flex h-9 w-9 items-center justify-center rounded-lg transition {{ $isData ? 'bg-brand text-white' : 'bg-white/10 text-white/70' }}">
                     <x-heroicon-o-clipboard-document-list class="h-5 w-5" />
                 </span>
                 <span>Data Sampel</span>
@@ -43,11 +44,21 @@
                 @endif
             </a>
         </nav>
-        <div class="p-4">
+        <div class="space-y-2 p-4">
             <div class="rounded-lg bg-white/10 p-4 text-xs text-white/80">
-                <p class="font-semibold text-white">Lab Lingkungan</p>
-                <p class="mt-1">Prototype UI. Auth Breeze menyusul.</p>
+                <p class="font-semibold text-white">{{ Auth::user()->name ?? 'Lab Lingkungan' }}</p>
+                <p class="mt-1 break-all">{{ Auth::user()->email ?? '' }}</p>
             </div>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit"
+                        class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-white/70 transition hover:bg-white/10 hover:text-white">
+                    <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10">
+                        <x-heroicon-o-arrow-left-start-on-rectangle class="h-5 w-5" />
+                    </span>
+                    <span>Keluar</span>
+                </button>
+            </form>
         </div>
     </aside>
 
@@ -61,27 +72,52 @@
             <nav class="flex items-center gap-2 text-sm md:hidden">
                 <a href="{{ route('dashboard') }}" class="rounded-lg px-3 py-1.5 {{ request()->routeIs('dashboard') ? 'bg-royal text-white' : 'text-slate-600' }}">Dashboard</a>
                 <a href="{{ route('data-sampels.index') }}" class="rounded-lg px-3 py-1.5 {{ request()->routeIs('data-sampels.*') ? 'bg-royal text-white' : 'text-slate-600' }}">Data</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="rounded-lg px-3 py-1.5 text-slate-600">Keluar</button>
+                </form>
             </nav>
             <div class="hidden md:block">
                 <p class="text-sm font-semibold text-royal">@yield('page-title', 'Dashboard')</p>
                 <p class="text-xs text-slate-500">@yield('page-subtitle', '')</p>
             </div>
-            <div class="flex items-center gap-3">
-                <a href="{{ route('login') }}" class="hidden text-xs text-slate-400 sm:block">Login (prototype)</a>
-                <div class="flex h-9 w-9 items-center justify-center rounded-full bg-brand/20 text-sm font-bold text-royal-dark">A</div>
+            <div class="hidden items-center gap-3 sm:flex">
+                <div class="text-right">
+                    <p class="text-xs font-semibold text-slate-700">{{ Auth::user()->name ?? '' }}</p>
+                    <a href="{{ route('profile.edit') }}" class="text-[11px] text-slate-400 hover:text-royal">Profil</a>
+                </div>
+                <div class="flex h-9 w-9 items-center justify-center rounded-full bg-brand/20 text-sm font-bold text-royal-dark">
+                    {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}
+                </div>
             </div>
         </header>
 
+        @isset($header)
+            <div class="border-b border-slate-200 bg-white px-4 py-3 sm:px-8">
+                {{ $header }}
+            </div>
+        @endisset
+
         <!-- Flash -->
         @if (session('success'))
-            <div class="mx-4 mt-4 rounded-lg border border-brand/40 bg-brand/10 px-4 py-3 text-sm font-medium text-emerald-800 sm:mx-8">
-                {{ session('success') }}
+            <div id="alert-success" class="mx-4 mt-4 flex items-center gap-3 rounded-lg border border-brand/40 bg-brand/10 px-4 py-3 text-sm font-medium text-emerald-800 sm:mx-8" role="alert">
+                <x-heroicon-o-check-circle class="h-5 w-5 shrink-0" />
+                <span>{{ session('success') }}</span>
+                <button type="button" class="ms-auto rounded-lg p-1 transition hover:bg-brand/20" data-dismiss-alert aria-label="Tutup">
+                    <x-heroicon-o-x-mark class="h-4 w-4" />
+                </button>
+            </div>
+        @endif
+        @if (session('status'))
+            <div class="mx-4 mt-4 rounded-lg border border-royal/20 bg-royal/5 px-4 py-3 text-sm font-medium text-royal sm:mx-8" role="alert">
+                {{ session('status') }}
             </div>
         @endif
 
         <!-- Content -->
         <main class="flex-1 px-4 py-6 sm:px-8">
             @yield('content')
+            {{ $slot ?? '' }}
         </main>
     </div>
 </div>

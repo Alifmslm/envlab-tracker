@@ -109,23 +109,34 @@ class DataSampelController extends Controller
 
     /**
      * Update the specified resource in storage.
+     *
+     * Section 5, User Roles & Access Control: Analyst (Staff) may only
+     * update the analysis status and testing notes. Any other submitted
+     * fields are ignored for Staff, so they can never alter sample data.
      */
     public function update(Request $request, DataSampel $dataSampel)
     {
-        $validated = $request->validate([
-            'kode_sampel' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('data_sampels', 'kode_sampel')->ignore($dataSampel->id),
-            ],
-            'nama_sampel' => ['required', 'string', 'max:255'],
-            'jenis_sampel' => ['required', Rule::in(['Air Bersih', 'Air Limbah', 'Udara', 'Emisi Gas', 'Tanah'])],
-            'jumlah_titik' => ['required', 'integer', 'min:0'],
-            'biaya_per_titik' => ['required', 'integer', 'min:0'],
-            'status_uji' => ['required', Rule::in(['Pending', 'In Analysis', 'Completed'])],
-            'catatan_kondisi' => ['nullable', 'string'],
-        ]);
+        if ($request->user()->isStaff()) {
+            $validated = $request->validate([
+                'status_uji' => ['required', Rule::in(['Pending', 'In Analysis', 'Completed'])],
+                'catatan_kondisi' => ['nullable', 'string'],
+            ]);
+        } else {
+            $validated = $request->validate([
+                'kode_sampel' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    Rule::unique('data_sampels', 'kode_sampel')->ignore($dataSampel->id),
+                ],
+                'nama_sampel' => ['required', 'string', 'max:255'],
+                'jenis_sampel' => ['required', Rule::in(['Air Bersih', 'Air Limbah', 'Udara', 'Emisi Gas', 'Tanah'])],
+                'jumlah_titik' => ['required', 'integer', 'min:0'],
+                'biaya_per_titik' => ['required', 'integer', 'min:0'],
+                'status_uji' => ['required', Rule::in(['Pending', 'In Analysis', 'Completed'])],
+                'catatan_kondisi' => ['nullable', 'string'],
+            ]);
+        }
 
         $dataSampel->update($validated);
 

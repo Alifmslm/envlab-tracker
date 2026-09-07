@@ -19,29 +19,30 @@
             <h2 class="text-xl font-bold text-royal">Selamat datang kembali</h2>
             <p class="mt-1 text-sm text-slate-500">Masuk untuk lanjut ke dashboard.</p>
 
-            <div class="mt-4 rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-3 text-xs text-slate-500">
-                Prototype: tombol Masuk langsung membuka
-                <a href="{{ route('dashboard') }}" class="font-semibold text-royal underline">dashboard</a>.
-                Breeze akan dipasang nanti.
-            </div>
+            <x-auth-session-status class="mt-4" :status="session('status')" />
 
-            <form action="{{ route('dashboard') }}" method="GET" class="mt-6 space-y-4">
+            <form method="POST" action="{{ route('login') }}" class="mt-6 space-y-4">
+                @csrf
                 <div>
                     <label for="email" class="mb-1.5 block text-sm font-medium text-slate-700">Email</label>
-                    <input id="email" type="email" placeholder="nama@lab.go.id"
+                    <input id="email" name="email" type="email" value="{{ old('email') }}" required autofocus autocomplete="username" placeholder="nama@lab.go.id"
                            class="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none transition placeholder:text-slate-400 focus:border-brand focus:ring-2 focus:ring-brand/30">
+                    <x-input-error :messages="$errors->get('email')" class="mt-1.5" />
                 </div>
                 <div>
                     <label for="password" class="mb-1.5 block text-sm font-medium text-slate-700">Password</label>
-                    <input id="password" type="password" placeholder="••••••••"
+                    <input id="password" name="password" type="password" required autocomplete="current-password" placeholder="••••••••"
                            class="w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm outline-none transition placeholder:text-slate-400 focus:border-brand focus:ring-2 focus:ring-brand/30">
+                    <x-input-error :messages="$errors->get('password')" class="mt-1.5" />
                 </div>
                 <div class="flex items-center justify-between text-sm">
-                    <label class="flex items-center gap-2 text-slate-600">
-                        <input type="checkbox" class="h-4 w-4 rounded border-slate-300 accent-[#00D97A]">
+                    <label for="remember_me" class="flex items-center gap-2 text-slate-600">
+                        <input id="remember_me" type="checkbox" name="remember" class="h-4 w-4 rounded border-slate-300 accent-[#00D97A]">
                         Ingat saya
                     </label>
-                    <span class="text-slate-400">Lupa password?</span>
+                    @if (Route::has('password.request'))
+                        <a href="{{ route('password.request') }}" class="text-royal hover:underline">Lupa password?</a>
+                    @endif
                 </div>
                 <button type="submit"
                         class="w-full rounded-lg bg-brand px-4 py-2.5 text-sm font-bold text-white transition hover:bg-brand-dark active:translate-y-px">
@@ -49,11 +50,12 @@
                 </button>
             </form>
 
-            <div class="mt-6 flex items-center justify-center gap-3 text-xs text-slate-400">
-                <a href="{{ route('dashboard') }}" class="hover:text-royal">Dashboard</a>
-                <span>•</span>
-                <a href="{{ route('data-sampels.index') }}" class="hover:text-royal">Data Sampel</a>
-            </div>
+            @if (Route::has('register'))
+                <p class="mt-6 text-center text-xs text-slate-500">
+                    Belum punya akun?
+                    <a href="{{ route('register') }}" class="font-semibold text-royal hover:underline">Daftar</a>
+                </p>
+            @endif
         </div>
     </div>
 </div>

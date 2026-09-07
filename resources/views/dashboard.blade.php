@@ -53,11 +53,13 @@
                 Lihat Semua
                 <x-heroicon-o-arrow-right class="h-3.5 w-3.5" />
             </a>
-            <a href="{{ route('data-sampels.index') }}"
-               class="inline-flex items-center gap-1.5 rounded-lg bg-brand px-4 py-2 text-xs font-bold text-white transition hover:bg-brand-dark">
-                <x-heroicon-o-plus class="h-4 w-4" />
-                Tambah
-            </a>
+            @if (auth()->user()->isAdmin())
+                <a href="{{ route('data-sampels.index') }}"
+                   class="inline-flex items-center gap-1.5 rounded-lg bg-brand px-4 py-2 text-xs font-bold text-white transition hover:bg-brand-dark">
+                    <x-heroicon-o-plus class="h-4 w-4" />
+                    Tambah
+                </a>
+            @endif
         </div>
     </div>
     <div class="overflow-x-auto">
