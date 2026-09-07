@@ -1,15 +1,27 @@
 <?php
 
 use App\Http\Controllers\DataSampelController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-// Prototype routes. No auth / middleware yet. Breeze will be added later.
-Route::get('/', fn () => redirect()->route('login'));
+Route::get('/', function () {
+    return auth()->check()
+        ? redirect()->route('dashboard')
+        : redirect()->route('login');
+});
 
-Route::get('/login', fn () => view('auth.login'))->name('login');
+Route::get('/dashboard', [DataSampelController::class, 'dashboard'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
-Route::get('/dashboard', [DataSampelController::class, 'dashboard'])->name('dashboard');
+Route::middleware('auth')->group(function () {
+    Route::resource('data-sampels', DataSampelController::class)
+        ->parameters(['data-sampels' => 'dataSampel'])
+        ->except(['create', 'edit', 'show']);
 
-Route::resource('data-sampels', DataSampelController::class)
-    ->parameters(['data-sampels' => 'dataSampel'])
-    ->except(['create', 'edit', 'show']);
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';
