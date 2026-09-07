@@ -18,13 +18,29 @@
             </div>
         </div>
         <nav class="flex-1 space-y-1 px-3">
+            @php
+                $isDashboard = request()->routeIs('dashboard');
+                $isData = request()->routeIs('data-sampels.*');
+            @endphp
             <a href="{{ route('dashboard') }}"
-               class="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition {{ request()->routeIs('dashboard') ? 'border-l-4 border-brand bg-white/15 text-white' : 'text-white/75 hover:bg-white/10 hover:text-white' }}">
+               class="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition {{ $isDashboard ? 'bg-white/15 text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
+                <span class="flex h-9 w-9 items-center justify-center rounded-lg transition {{ $isDashboard ? 'bg-brand text-royal-dark' : 'bg-white/10 text-white/70' }}">
+                    <x-heroicon-o-squares-2x2 class="h-5 w-5" />
+                </span>
                 <span>Dashboard</span>
+                @if ($isDashboard)
+                    <span class="ml-auto h-2 w-2 rounded-full bg-brand"></span>
+                @endif
             </a>
             <a href="{{ route('data-sampels.index') }}"
-               class="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition {{ request()->routeIs('data-sampels.*') ? 'border-l-4 border-brand bg-white/15 text-white' : 'text-white/75 hover:bg-white/10 hover:text-white' }}">
+               class="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition {{ $isData ? 'bg-white/15 text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
+                <span class="flex h-9 w-9 items-center justify-center rounded-lg transition {{ $isData ? 'bg-brand text-royal-dark' : 'bg-white/10 text-white/70' }}">
+                    <x-heroicon-o-clipboard-document-list class="h-5 w-5" />
+                </span>
                 <span>Data Sampel</span>
+                @if ($isData)
+                    <span class="ml-auto h-2 w-2 rounded-full bg-brand"></span>
+                @endif
             </a>
         </nav>
         <div class="p-4">

@@ -14,17 +14,32 @@
 
 <!-- Mini summary strip -->
 <div class="grid gap-4 sm:grid-cols-3">
-    <div class="rounded-2xl bg-white p-4 shadow-sm">
-        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Jenis Terdaftar</p>
-        <p class="mt-1 text-2xl font-bold text-royal">{{ $totalJenisSampelTerdaftar ?? 0 }}</p>
+    <div class="flex items-center justify-between rounded-2xl bg-white p-4 shadow-sm">
+        <div>
+            <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Jenis Terdaftar</p>
+            <p class="mt-1 text-2xl font-bold text-royal">{{ $totalJenisSampelTerdaftar ?? 0 }}</p>
+        </div>
+        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/15 text-emerald-700">
+            <x-heroicon-o-beaker class="h-5 w-5" />
+        </span>
     </div>
-    <div class="rounded-2xl bg-white p-4 shadow-sm">
-        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Total Titik</p>
-        <p class="mt-1 text-2xl font-bold text-royal">{{ $totalTitikSampel ?? 0 }}</p>
+    <div class="flex items-center justify-between rounded-2xl bg-white p-4 shadow-sm">
+        <div>
+            <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Total Titik</p>
+            <p class="mt-1 text-2xl font-bold text-royal">{{ $totalTitikSampel ?? 0 }}</p>
+        </div>
+        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/15 text-emerald-700">
+            <x-heroicon-o-map-pin class="h-5 w-5" />
+        </span>
     </div>
-    <div class="rounded-2xl bg-white p-4 shadow-sm">
-        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Estimasi Tagihan</p>
-        <p class="mt-1 text-2xl font-bold text-royal">{{ Rupiah::format($totalEstimasiTagihan ?? 0) }}</p>
+    <div class="flex items-center justify-between rounded-2xl bg-royal p-4 text-white shadow-sm">
+        <div>
+            <p class="text-[11px] font-semibold uppercase tracking-wide text-white/70">Estimasi Tagihan</p>
+            <p class="mt-1 text-2xl font-bold">{{ Rupiah::format($totalEstimasiTagihan ?? 0) }}</p>
+        </div>
+        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand text-royal-dark">
+            <x-heroicon-o-banknotes class="h-5 w-5" />
+        </span>
     </div>
 </div>
 
@@ -36,8 +51,9 @@
             <p class="text-xs text-slate-500">Klik Lihat, Ubah, atau Hapus pada baris. Tidak ada halaman terpisah.</p>
         </div>
         <button type="button" data-open-modal="modal-create"
-                class="rounded-xl bg-brand px-4 py-2 text-xs font-bold text-royal-dark transition hover:bg-brand-dark active:translate-y-px">
-            + Tambah Sampel
+                class="inline-flex items-center gap-1.5 rounded-xl bg-brand px-4 py-2 text-xs font-bold text-royal-dark transition hover:bg-brand-dark active:translate-y-px">
+            <x-heroicon-o-plus class="h-4 w-4" />
+            Tambah Sampel
         </button>
     </div>
 
@@ -99,7 +115,8 @@
                                     data-total="{{ Rupiah::format($s->jumlah_titik * $s->biaya_per_titik) }}"
                                     data-status="{{ $s->status_uji }}"
                                     data-catatan="{{ $s->catatan_kondisi ?? '-' }}"
-                                    class="rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-600 transition hover:border-royal hover:text-royal">
+                                    class="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-600 transition hover:border-royal hover:text-royal">
+                                <x-heroicon-o-eye class="h-3.5 w-3.5" />
                                 Lihat
                             </button>
                             <button type="button"
@@ -112,7 +129,8 @@
                                     data-biaya="{{ $s->biaya_per_titik }}"
                                     data-status="{{ $s->status_uji }}"
                                     data-catatan="{{ $s->catatan_kondisi }}"
-                                    class="rounded-lg bg-royal px-2.5 py-1.5 text-xs font-semibold text-white transition hover:bg-royal-dark">
+                                    class="inline-flex items-center gap-1 rounded-lg bg-royal px-2.5 py-1.5 text-xs font-semibold text-white transition hover:bg-royal-dark">
+                                <x-heroicon-o-pencil-square class="h-3.5 w-3.5" />
                                 Ubah
                             </button>
                             <button type="button"
@@ -120,7 +138,8 @@
                                     data-id="{{ $s->id }}"
                                     data-kode="{{ $s->kode_sampel }}"
                                     data-nama="{{ $s->nama_sampel }}"
-                                    class="rounded-lg border border-red-200 px-2.5 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-600 hover:text-white">
+                                    class="inline-flex items-center gap-1 rounded-lg border border-red-200 px-2.5 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-600 hover:text-white">
+                                <x-heroicon-o-trash class="h-3.5 w-3.5" />
                                 Hapus
                             </button>
                         </div>
@@ -150,7 +169,7 @@
     <div class="w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-xl">
         <div class="flex items-center justify-between bg-royal px-6 py-4 text-white">
             <h3 class="text-sm font-bold">Tambah Sampel Baru</h3>
-            <button type="button" data-close-modal class="rounded-lg px-2 py-1 text-lg leading-none hover:bg-white/15">×</button>
+            <button type="button" data-close-modal class="rounded-lg p-1 hover:bg-white/15"><x-heroicon-o-x-mark class="h-5 w-5" /></button>
         </div>
         <form action="{{ route('data-sampels.store') }}" method="POST" class="grid gap-4 px-6 py-5 sm:grid-cols-2">
             @csrf
@@ -219,7 +238,7 @@
     <div class="w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-xl">
         <div class="flex items-center justify-between bg-royal px-6 py-4 text-white">
             <h3 class="text-sm font-bold">Ubah Sampel <span id="edit-title-kode" class="font-normal text-white/70"></span></h3>
-            <button type="button" data-close-modal class="rounded-lg px-2 py-1 text-lg leading-none hover:bg-white/15">×</button>
+            <button type="button" data-close-modal class="rounded-lg p-1 hover:bg-white/15"><x-heroicon-o-x-mark class="h-5 w-5" /></button>
         </div>
         <form id="edit-form" method="POST" class="grid gap-4 px-6 py-5 sm:grid-cols-2">
             @csrf
@@ -281,7 +300,7 @@
     <div class="w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-xl">
         <div class="flex items-center justify-between bg-royal px-6 py-4 text-white">
             <h3 class="text-sm font-bold">Detail Sampel</h3>
-            <button type="button" data-close-modal class="rounded-lg px-2 py-1 text-lg leading-none hover:bg-white/15">×</button>
+            <button type="button" data-close-modal class="rounded-lg p-1 hover:bg-white/15"><x-heroicon-o-x-mark class="h-5 w-5" /></button>
         </div>
         <div class="space-y-4 px-6 py-5 text-sm">
             <div class="flex flex-wrap items-center gap-2">
