@@ -11,7 +11,7 @@
     <!-- Sidebar -->
     <aside class="hidden w-64 shrink-0 flex-col bg-royal text-white md:flex">
         <div class="flex items-center gap-3 px-6 py-6">
-            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand font-bold text-royal-dark">EL</div>
+            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-brand font-bold text-royal-dark">EL</div>
             <div>
                 <p class="text-sm font-bold leading-tight">EnvLab</p>
                 <p class="text-xs text-white/70">Tracker</p>
@@ -23,7 +23,7 @@
                 $isData = request()->routeIs('data-sampels.*');
             @endphp
             <a href="{{ route('dashboard') }}"
-               class="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition {{ $isDashboard ? 'bg-white/15 text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
+               class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition {{ $isDashboard ? 'bg-white/15 text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
                 <span class="flex h-9 w-9 items-center justify-center rounded-lg transition {{ $isDashboard ? 'bg-brand text-royal-dark' : 'bg-white/10 text-white/70' }}">
                     <x-heroicon-o-squares-2x2 class="h-5 w-5" />
                 </span>
@@ -33,7 +33,7 @@
                 @endif
             </a>
             <a href="{{ route('data-sampels.index') }}"
-               class="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition {{ $isData ? 'bg-white/15 text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
+               class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition {{ $isData ? 'bg-white/15 text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }}">
                 <span class="flex h-9 w-9 items-center justify-center rounded-lg transition {{ $isData ? 'bg-brand text-royal-dark' : 'bg-white/10 text-white/70' }}">
                     <x-heroicon-o-clipboard-document-list class="h-5 w-5" />
                 </span>
@@ -44,7 +44,7 @@
             </a>
         </nav>
         <div class="p-4">
-            <div class="rounded-xl bg-white/10 p-4 text-xs text-white/80">
+            <div class="rounded-lg bg-white/10 p-4 text-xs text-white/80">
                 <p class="font-semibold text-white">Lab Lingkungan</p>
                 <p class="mt-1">Prototype UI. Auth Breeze menyusul.</p>
             </div>
@@ -74,7 +74,7 @@
 
         <!-- Flash -->
         @if (session('success'))
-            <div class="mx-4 mt-4 rounded-xl border border-brand/40 bg-brand/10 px-4 py-3 text-sm font-medium text-emerald-800 sm:mx-8">
+            <div class="mx-4 mt-4 rounded-lg border border-brand/40 bg-brand/10 px-4 py-3 text-sm font-medium text-emerald-800 sm:mx-8">
                 {{ session('success') }}
             </div>
         @endif

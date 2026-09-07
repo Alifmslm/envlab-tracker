@@ -11,40 +11,37 @@
 
 <!-- Summary cards -->
 <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-    <div class="rounded-2xl bg-white p-5 shadow-sm">
+    <div class="rounded-lg bg-white p-5">
         <div class="flex items-center justify-between">
             <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Total Jenis Sampel Terdaftar</p>
-            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/15 text-emerald-700">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-brand/15 text-emerald-700">
                 <x-heroicon-o-beaker class="h-5 w-5" />
             </span>
         </div>
         <p class="mt-3 text-3xl font-bold text-royal">{{ $totalJenisSampelTerdaftar ?? 0 }}</p>
-        <p class="mt-1 text-xs text-slate-500">Jenis unik dari kolom jenis_sampel</p>
     </div>
-    <div class="rounded-2xl bg-white p-5 shadow-sm">
+    <div class="rounded-lg bg-white p-5">
         <div class="flex items-center justify-between">
             <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Total Titik / Replikasi Diuji</p>
-            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/15 text-emerald-700">
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-brand/15 text-emerald-700">
                 <x-heroicon-o-map-pin class="h-5 w-5" />
             </span>
         </div>
         <p class="mt-3 text-3xl font-bold text-royal">{{ $totalTitikSampel ?? 0 }}</p>
-        <p class="mt-1 text-xs text-slate-500">Penjumlahan kolom jumlah_titik</p>
     </div>
-    <div class="rounded-2xl bg-royal p-5 text-white shadow-sm sm:col-span-2 xl:col-span-1">
+    <div class="rounded-lg bg-white p-5 sm:col-span-2 xl:col-span-1">
         <div class="flex items-center justify-between">
-            <p class="text-xs font-semibold uppercase tracking-wide text-white/70">Total Estimasi Nilai Tagihan Uji</p>
-            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand text-royal-dark">
+            <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Total Estimasi Nilai Tagihan Uji</p>
+            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-brand/15 text-emerald-700">
                 <x-heroicon-o-banknotes class="h-5 w-5" />
             </span>
         </div>
-        <p class="mt-3 text-3xl font-bold">{{ Rupiah::format($totalEstimasiTagihan ?? 0) }}</p>
-        <p class="mt-1 text-xs text-white/70">SUM(jumlah_titik x biaya_per_titik)</p>
+        <p class="mt-3 text-3xl font-bold text-royal">{{ Rupiah::format($totalEstimasiTagihan ?? 0) }}</p>
     </div>
 </div>
 
 <!-- Recent table -->
-<div class="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+<div class="mt-6 overflow-hidden rounded-lg border border-slate-200 bg-white">
     <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-5 py-4">
         <div>
             <h2 class="text-sm font-bold text-royal">Data Sampel Terbaru</h2>
@@ -52,12 +49,12 @@
         </div>
         <div class="flex gap-2">
             <a href="{{ route('data-sampels.index') }}"
-               class="inline-flex items-center gap-1.5 rounded-xl border border-royal/20 px-4 py-2 text-xs font-semibold text-royal transition hover:bg-royal hover:text-white">
+               class="inline-flex items-center gap-1.5 rounded-lg border border-royal/20 px-4 py-2 text-xs font-semibold text-royal transition hover:bg-royal hover:text-white">
                 Lihat Semua
                 <x-heroicon-o-arrow-right class="h-3.5 w-3.5" />
             </a>
             <a href="{{ route('data-sampels.index') }}"
-               class="inline-flex items-center gap-1.5 rounded-xl bg-brand px-4 py-2 text-xs font-bold text-royal-dark transition hover:bg-brand-dark">
+               class="inline-flex items-center gap-1.5 rounded-lg bg-brand px-4 py-2 text-xs font-bold text-white transition hover:bg-brand-dark">
                 <x-heroicon-o-plus class="h-4 w-4" />
                 Tambah
             </a>

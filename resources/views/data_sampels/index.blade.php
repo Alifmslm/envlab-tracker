@@ -14,51 +14,51 @@
 
 <!-- Mini summary strip -->
 <div class="grid gap-4 sm:grid-cols-3">
-    <div class="flex items-center justify-between rounded-2xl bg-white p-4 shadow-sm">
+    <div class="flex items-center justify-between rounded-lg bg-white p-4">
         <div>
             <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Jenis Terdaftar</p>
             <p class="mt-1 text-2xl font-bold text-royal">{{ $totalJenisSampelTerdaftar ?? 0 }}</p>
         </div>
-        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/15 text-emerald-700">
+        <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-brand/15 text-emerald-700">
             <x-heroicon-o-beaker class="h-5 w-5" />
         </span>
     </div>
-    <div class="flex items-center justify-between rounded-2xl bg-white p-4 shadow-sm">
+    <div class="flex items-center justify-between rounded-lg bg-white p-4">
         <div>
             <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Total Titik</p>
             <p class="mt-1 text-2xl font-bold text-royal">{{ $totalTitikSampel ?? 0 }}</p>
         </div>
-        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/15 text-emerald-700">
+        <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-brand/15 text-emerald-700">
             <x-heroicon-o-map-pin class="h-5 w-5" />
         </span>
     </div>
-    <div class="flex items-center justify-between rounded-2xl bg-royal p-4 text-white shadow-sm">
+    <div class="flex items-center justify-between rounded-lg bg-white p-4">
         <div>
-            <p class="text-[11px] font-semibold uppercase tracking-wide text-white/70">Estimasi Tagihan</p>
-            <p class="mt-1 text-2xl font-bold">{{ Rupiah::format($totalEstimasiTagihan ?? 0) }}</p>
+            <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Estimasi Tagihan</p>
+            <p class="mt-1 text-2xl font-bold text-royal">{{ Rupiah::format($totalEstimasiTagihan ?? 0) }}</p>
         </div>
-        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-brand text-royal-dark">
+        <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-brand/15 text-emerald-700">
             <x-heroicon-o-banknotes class="h-5 w-5" />
         </span>
     </div>
 </div>
 
 <!-- Table card -->
-<div class="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+<div class="mt-6 overflow-hidden rounded-lg border border-slate-200 bg-white">
     <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-5 py-4">
         <div>
             <h2 class="text-sm font-bold text-royal">Tabel Data Sampel</h2>
             <p class="text-xs text-slate-500">Klik Lihat, Ubah, atau Hapus pada baris. Tidak ada halaman terpisah.</p>
         </div>
         <button type="button" data-open-modal="modal-create"
-                class="inline-flex items-center gap-1.5 rounded-xl bg-brand px-4 py-2 text-xs font-bold text-royal-dark transition hover:bg-brand-dark active:translate-y-px">
+                class="inline-flex items-center gap-1.5 rounded-lg bg-brand px-4 py-2 text-xs font-bold text-white transition hover:bg-brand-dark active:translate-y-px">
             <x-heroicon-o-plus class="h-4 w-4" />
             Tambah Sampel
         </button>
     </div>
 
     @if ($errors->any())
-        <div class="mx-5 mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-700">
+        <div class="mx-5 mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-700">
             <p class="font-bold">Periksa kembali isian:</p>
             <ul class="mt-1 list-disc pl-5">
                 @foreach ($errors->all() as $error)
@@ -115,9 +115,9 @@
                                     data-total="{{ Rupiah::format($s->jumlah_titik * $s->biaya_per_titik) }}"
                                     data-status="{{ $s->status_uji }}"
                                     data-catatan="{{ $s->catatan_kondisi ?? '-' }}"
-                                    class="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-600 transition hover:border-royal hover:text-royal">
-                                <x-heroicon-o-eye class="h-3.5 w-3.5" />
-                                Lihat
+                                    class="inline-flex items-center justify-center rounded-lg border border-slate-200 p-2 text-slate-600 transition hover:border-royal hover:text-royal"
+                                    title="Lihat" aria-label="Lihat">
+                                <x-heroicon-o-eye class="h-4 w-4" />
                             </button>
                             <button type="button"
                                     data-open-modal="modal-edit"
@@ -129,18 +129,18 @@
                                     data-biaya="{{ $s->biaya_per_titik }}"
                                     data-status="{{ $s->status_uji }}"
                                     data-catatan="{{ $s->catatan_kondisi }}"
-                                    class="inline-flex items-center gap-1 rounded-lg bg-royal px-2.5 py-1.5 text-xs font-semibold text-white transition hover:bg-royal-dark">
-                                <x-heroicon-o-pencil-square class="h-3.5 w-3.5" />
-                                Ubah
+                                    class="inline-flex items-center justify-center rounded-lg bg-royal p-2 text-white transition hover:bg-royal-dark"
+                                    title="Ubah" aria-label="Ubah">
+                                <x-heroicon-o-pencil-square class="h-4 w-4" />
                             </button>
                             <button type="button"
                                     data-open-modal="modal-delete"
                                     data-id="{{ $s->id }}"
                                     data-kode="{{ $s->kode_sampel }}"
                                     data-nama="{{ $s->nama_sampel }}"
-                                    class="inline-flex items-center gap-1 rounded-lg border border-red-200 px-2.5 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-600 hover:text-white">
-                                <x-heroicon-o-trash class="h-3.5 w-3.5" />
-                                Hapus
+                                    class="inline-flex items-center justify-center rounded-lg border border-red-200 p-2 text-red-600 transition hover:bg-red-600 hover:text-white"
+                                    title="Hapus" aria-label="Hapus">
+                                <x-heroicon-o-trash class="h-4 w-4" />
                             </button>
                         </div>
                     </td>
@@ -166,7 +166,7 @@
 
 <!-- ============ MODAL: CREATE ============ -->
 <div id="modal-create" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
-    <div class="w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-xl">
+    <div class="w-full max-w-2xl overflow-hidden rounded-lg bg-white">
         <div class="flex items-center justify-between bg-royal px-6 py-4 text-white">
             <h3 class="text-sm font-bold">Tambah Sampel Baru</h3>
             <button type="button" data-close-modal class="rounded-lg p-1 hover:bg-white/15"><x-heroicon-o-x-mark class="h-5 w-5" /></button>
@@ -176,19 +176,19 @@
             <div>
                 <label class="mb-1.5 block text-xs font-semibold text-slate-700">Kode Sampel *</label>
                 <input name="kode_sampel" value="{{ old('kode_sampel') }}" required placeholder="SMP-2026-007"
-                       class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">
+                       class="w-full rounded-lg border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">
                 @error('kode_sampel')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
             </div>
             <div>
                 <label class="mb-1.5 block text-xs font-semibold text-slate-700">Nama Sampel *</label>
                 <input name="nama_sampel" value="{{ old('nama_sampel') }}" required placeholder="Air Limbah PT Z - Outlet"
-                       class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">
+                       class="w-full rounded-lg border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">
                 @error('nama_sampel')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
             </div>
             <div>
                 <label class="mb-1.5 block text-xs font-semibold text-slate-700">Jenis Sampel *</label>
                 <select name="jenis_sampel" required
-                        class="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">
+                        class="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">
                     <option value="">Pilih jenis</option>
                     @foreach ($jenisOptions as $j)
                         <option value="{{ $j }}" @selected(old('jenis_sampel') === $j)>{{ $j }}</option>
@@ -199,7 +199,7 @@
             <div>
                 <label class="mb-1.5 block text-xs font-semibold text-slate-700">Status Uji *</label>
                 <select name="status_uji" required
-                        class="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">
+                        class="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">
                     <option value="">Pilih status</option>
                     @foreach ($statusOptions as $st)
                         <option value="{{ $st }}" @selected(old('status_uji') === $st)>{{ $st }}</option>
@@ -210,24 +210,24 @@
             <div>
                 <label class="mb-1.5 block text-xs font-semibold text-slate-700">Jumlah Titik *</label>
                 <input name="jumlah_titik" type="number" min="0" step="1" value="{{ old('jumlah_titik', 1) }}" required
-                       class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">
+                       class="w-full rounded-lg border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">
                 @error('jumlah_titik')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
             </div>
             <div>
                 <label class="mb-1.5 block text-xs font-semibold text-slate-700">Biaya per Titik (Rp) *</label>
                 <input name="biaya_per_titik" type="number" min="0" step="1" value="{{ old('biaya_per_titik', 0) }}" required
-                       class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">
+                       class="w-full rounded-lg border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">
                 @error('biaya_per_titik')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
             </div>
             <div class="sm:col-span-2">
                 <label class="mb-1.5 block text-xs font-semibold text-slate-700">Catatan Kondisi <span class="font-normal text-slate-400">(opsional)</span></label>
                 <textarea name="catatan_kondisi" rows="2" placeholder="Kondisi sampel saat diterima..."
-                          class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">{{ old('catatan_kondisi') }}</textarea>
+                          class="w-full rounded-lg border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">{{ old('catatan_kondisi') }}</textarea>
                 @error('catatan_kondisi')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
             </div>
             <div class="flex justify-end gap-2 sm:col-span-2">
-                <button type="button" data-close-modal class="rounded-xl border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50">Batal</button>
-                <button type="submit" class="rounded-xl bg-brand px-5 py-2 text-xs font-bold text-royal-dark transition hover:bg-brand-dark active:translate-y-px">Simpan</button>
+                <button type="button" data-close-modal class="rounded-lg border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50">Batal</button>
+                <button type="submit" class="rounded-lg bg-brand px-5 py-2 text-xs font-bold text-royal-dark transition hover:bg-brand-dark active:translate-y-px">Simpan</button>
             </div>
         </form>
     </div>
@@ -235,7 +235,7 @@
 
 <!-- ============ MODAL: EDIT ============ -->
 <div id="modal-edit" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
-    <div class="w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-xl">
+    <div class="w-full max-w-2xl overflow-hidden rounded-lg bg-white">
         <div class="flex items-center justify-between bg-royal px-6 py-4 text-white">
             <h3 class="text-sm font-bold">Ubah Sampel <span id="edit-title-kode" class="font-normal text-white/70"></span></h3>
             <button type="button" data-close-modal class="rounded-lg p-1 hover:bg-white/15"><x-heroicon-o-x-mark class="h-5 w-5" /></button>
@@ -247,17 +247,17 @@
             <div>
                 <label class="mb-1.5 block text-xs font-semibold text-slate-700">Kode Sampel *</label>
                 <input id="edit-kode" name="kode_sampel" required
-                       class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">
+                       class="w-full rounded-lg border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">
             </div>
             <div>
                 <label class="mb-1.5 block text-xs font-semibold text-slate-700">Nama Sampel *</label>
                 <input id="edit-nama" name="nama_sampel" required
-                       class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">
+                       class="w-full rounded-lg border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">
             </div>
             <div>
                 <label class="mb-1.5 block text-xs font-semibold text-slate-700">Jenis Sampel *</label>
                 <select id="edit-jenis" name="jenis_sampel" required
-                        class="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">
+                        class="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">
                     @foreach ($jenisOptions as $j)
                         <option value="{{ $j }}">{{ $j }}</option>
                     @endforeach
@@ -266,7 +266,7 @@
             <div>
                 <label class="mb-1.5 block text-xs font-semibold text-slate-700">Status Uji *</label>
                 <select id="edit-status" name="status_uji" required
-                        class="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">
+                        class="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">
                     @foreach ($statusOptions as $st)
                         <option value="{{ $st }}">{{ $st }}</option>
                     @endforeach
@@ -275,21 +275,21 @@
             <div>
                 <label class="mb-1.5 block text-xs font-semibold text-slate-700">Jumlah Titik *</label>
                 <input id="edit-titik" name="jumlah_titik" type="number" min="0" step="1" required
-                       class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">
+                       class="w-full rounded-lg border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">
             </div>
             <div>
                 <label class="mb-1.5 block text-xs font-semibold text-slate-700">Biaya per Titik (Rp) *</label>
                 <input id="edit-biaya" name="biaya_per_titik" type="number" min="0" step="1" required
-                       class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">
+                       class="w-full rounded-lg border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">
             </div>
             <div class="sm:col-span-2">
                 <label class="mb-1.5 block text-xs font-semibold text-slate-700">Catatan Kondisi <span class="font-normal text-slate-400">(opsional)</span></label>
                 <textarea id="edit-catatan" name="catatan_kondisi" rows="2"
-                          class="w-full rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30"></textarea>
+                          class="w-full rounded-lg border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30"></textarea>
             </div>
             <div class="flex justify-end gap-2 sm:col-span-2">
-                <button type="button" data-close-modal class="rounded-xl border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50">Batal</button>
-                <button type="submit" class="rounded-xl bg-brand px-5 py-2 text-xs font-bold text-royal-dark transition hover:bg-brand-dark active:translate-y-px">Simpan Perubahan</button>
+                <button type="button" data-close-modal class="rounded-lg border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50">Batal</button>
+                <button type="submit" class="rounded-lg bg-brand px-5 py-2 text-xs font-bold text-white transition hover:bg-brand-dark active:translate-y-px">Simpan Perubahan</button>
             </div>
         </form>
     </div>
@@ -297,7 +297,7 @@
 
 <!-- ============ MODAL: SHOW ============ -->
 <div id="modal-show" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
-    <div class="w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-xl">
+    <div class="w-full max-w-lg overflow-hidden rounded-lg bg-white">
         <div class="flex items-center justify-between bg-royal px-6 py-4 text-white">
             <h3 class="text-sm font-bold">Detail Sampel</h3>
             <button type="button" data-close-modal class="rounded-lg p-1 hover:bg-white/15"><x-heroicon-o-x-mark class="h-5 w-5" /></button>
@@ -310,25 +310,25 @@
             </div>
             <p id="show-nama" class="text-base font-semibold text-slate-800"></p>
             <div class="grid grid-cols-3 gap-3">
-                <div class="rounded-xl bg-slate-50 p-3">
+                <div class="rounded-lg bg-slate-50 p-3">
                     <p class="text-[11px] text-slate-500">Titik</p>
                     <p id="show-titik" class="text-lg font-bold text-royal"></p>
                 </div>
-                <div class="rounded-xl bg-slate-50 p-3">
+                <div class="rounded-lg bg-slate-50 p-3">
                     <p class="text-[11px] text-slate-500">Biaya/Titik</p>
                     <p id="show-biaya" class="text-lg font-bold text-royal"></p>
                 </div>
-                <div class="rounded-xl bg-brand/10 p-3">
+                <div class="rounded-lg bg-brand/10 p-3">
                     <p class="text-[11px] text-slate-500">Total</p>
                     <p id="show-total" class="text-lg font-bold text-emerald-700"></p>
                 </div>
             </div>
             <div>
                 <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Catatan Kondisi</p>
-                <p id="show-catatan" class="mt-1 rounded-xl bg-slate-50 p-3 text-slate-700"></p>
+                <p id="show-catatan" class="mt-1 rounded-lg bg-slate-50 p-3 text-slate-700"></p>
             </div>
             <div class="flex justify-end">
-                <button type="button" data-close-modal class="rounded-xl border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50">Tutup</button>
+                <button type="button" data-close-modal class="rounded-lg border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50">Tutup</button>
             </div>
         </div>
     </div>
@@ -336,7 +336,7 @@
 
 <!-- ============ MODAL: DELETE ============ -->
 <div id="modal-delete" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
-    <div class="w-full max-w-sm overflow-hidden rounded-2xl bg-white shadow-xl">
+    <div class="w-full max-w-sm overflow-hidden rounded-lg bg-white">
         <div class="px-6 py-5">
             <h3 class="text-sm font-bold text-slate-800">Hapus sampel ini?</h3>
             <p class="mt-2 text-sm text-slate-600"><span id="delete-kode" class="font-bold text-royal"></span> <span id="delete-nama" class="text-slate-500"></span></p>
@@ -344,8 +344,8 @@
             <form id="delete-form" method="POST" class="mt-4 flex justify-end gap-2">
                 @csrf
                 @method('DELETE')
-                <button type="button" data-close-modal class="rounded-xl border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50">Batal</button>
-                <button type="submit" class="rounded-xl bg-red-600 px-4 py-2 text-xs font-bold text-white transition hover:bg-red-700 active:translate-y-px">Ya, Hapus</button>
+                <button type="button" data-close-modal class="rounded-lg border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50">Batal</button>
+                <button type="submit" class="rounded-lg bg-red-600 px-4 py-2 text-xs font-bold text-white transition hover:bg-red-700 active:translate-y-px">Ya, Hapus</button>
             </form>
         </div>
     </div>
