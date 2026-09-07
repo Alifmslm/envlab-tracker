@@ -50,11 +50,13 @@
             <h2 class="text-sm font-bold text-royal">Tabel Data Sampel</h2>
             <p class="text-xs text-slate-500">Klik Lihat, Ubah, atau Hapus pada baris. Tidak ada halaman terpisah.</p>
         </div>
-        <button type="button" data-open-modal="modal-create"
-                class="inline-flex items-center gap-1.5 rounded-lg bg-brand px-4 py-2 text-xs font-bold text-white transition hover:bg-brand-dark active:translate-y-px">
-            <x-heroicon-o-plus class="h-4 w-4" />
-            Tambah Sampel
-        </button>
+        @if (auth()->user()->isAdmin())
+            <button type="button" data-open-modal="modal-create"
+                    class="inline-flex items-center gap-1.5 rounded-lg bg-brand px-4 py-2 text-xs font-bold text-white transition hover:bg-brand-dark active:translate-y-px">
+                <x-heroicon-o-plus class="h-4 w-4" />
+                Tambah Sampel
+            </button>
+        @endif
     </div>
 
     @if ($errors->any())
@@ -119,29 +121,45 @@
                                     title="Lihat" aria-label="Lihat">
                                 <x-heroicon-o-eye class="h-4 w-4" />
                             </button>
-                            <button type="button"
-                                    data-open-modal="modal-edit"
-                                    data-id="{{ $s->id }}"
-                                    data-kode="{{ $s->kode_sampel }}"
-                                    data-nama="{{ $s->nama_sampel }}"
-                                    data-jenis="{{ $s->jenis_sampel }}"
-                                    data-titik="{{ $s->jumlah_titik }}"
-                                    data-biaya="{{ $s->biaya_per_titik }}"
-                                    data-status="{{ $s->status_uji }}"
-                                    data-catatan="{{ $s->catatan_kondisi }}"
-                                    class="inline-flex items-center justify-center rounded-lg bg-royal p-2 text-white transition hover:bg-royal-dark"
-                                    title="Ubah" aria-label="Ubah">
-                                <x-heroicon-o-pencil-square class="h-4 w-4" />
-                            </button>
-                            <button type="button"
-                                    data-open-modal="modal-delete"
-                                    data-id="{{ $s->id }}"
-                                    data-kode="{{ $s->kode_sampel }}"
-                                    data-nama="{{ $s->nama_sampel }}"
-                                    class="inline-flex items-center justify-center rounded-lg border border-red-200 p-2 text-red-600 transition hover:bg-red-600 hover:text-white"
-                                    title="Hapus" aria-label="Hapus">
-                                <x-heroicon-o-trash class="h-4 w-4" />
-                            </button>
+                            @if (auth()->user()->isAdmin())
+                                <button type="button"
+                                        data-open-modal="modal-edit"
+                                        data-id="{{ $s->id }}"
+                                        data-kode="{{ $s->kode_sampel }}"
+                                        data-nama="{{ $s->nama_sampel }}"
+                                        data-jenis="{{ $s->jenis_sampel }}"
+                                        data-titik="{{ $s->jumlah_titik }}"
+                                        data-biaya="{{ $s->biaya_per_titik }}"
+                                        data-status="{{ $s->status_uji }}"
+                                        data-catatan="{{ $s->catatan_kondisi }}"
+                                        class="inline-flex items-center justify-center rounded-lg bg-royal p-2 text-white transition hover:bg-royal-dark"
+                                        title="Ubah" aria-label="Ubah">
+                                    <x-heroicon-o-pencil-square class="h-4 w-4" />
+                                </button>
+                            @endif
+                            @if (auth()->user()->isStaff())
+                                <button type="button"
+                                        data-open-modal="modal-status"
+                                        data-id="{{ $s->id }}"
+                                        data-kode="{{ $s->kode_sampel }}"
+                                        data-status="{{ $s->status_uji }}"
+                                        data-catatan="{{ $s->catatan_kondisi }}"
+                                        class="inline-flex items-center justify-center rounded-lg bg-royal p-2 text-white transition hover:bg-royal-dark"
+                                        title="Perbarui status" aria-label="Perbarui status">
+                                    <x-heroicon-o-arrow-path class="h-4 w-4" />
+                                </button>
+                            @endif
+                            @if (auth()->user()->isAdmin())
+                                <button type="button"
+                                        data-open-modal="modal-delete"
+                                        data-id="{{ $s->id }}"
+                                        data-kode="{{ $s->kode_sampel }}"
+                                        data-nama="{{ $s->nama_sampel }}"
+                                        class="inline-flex items-center justify-center rounded-lg border border-red-200 p-2 text-red-600 transition hover:bg-red-600 hover:text-white"
+                                        title="Hapus" aria-label="Hapus">
+                                    <x-heroicon-o-trash class="h-4 w-4" />
+                                </button>
+                            @endif
                         </div>
                     </td>
                 </tr>
@@ -164,6 +182,8 @@
     @endif
 </div>
 
+<!-- Create / full-edit / delete modals are Admin-only. -->
+@if (auth()->user()->isAdmin())
 <!-- ============ MODAL: CREATE ============ -->
 <div id="modal-create" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
     <div class="w-full max-w-2xl overflow-hidden rounded-lg bg-white">
@@ -350,6 +370,44 @@
         </div>
     </div>
 </div>
+@endif
+
+@if (auth()->user()->isStaff())
+<!-- ============ MODAL: STATUS (Analyst) ============ -->
+<div id="modal-status" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
+    <div class="w-full max-w-lg overflow-hidden rounded-lg bg-white">
+        <div class="flex items-center justify-between bg-royal px-6 py-4 text-white">
+            <h3 class="text-sm font-bold">Perbarui Status <span id="status-title-kode" class="font-normal text-white/70"></span></h3>
+            <button type="button" data-close-modal class="rounded-lg p-1 hover:bg-white/15" aria-label="Tutup"><x-heroicon-o-x-mark class="h-5 w-5" /></button>
+        </div>
+        <form id="status-form" method="POST" class="grid gap-4 px-6 py-5">
+            @csrf
+            @method('PUT')
+            <input type="hidden" name="_edit_id" id="status-id-field" value="{{ $failedEditId }}">
+            <div>
+                <label class="mb-1.5 block text-xs font-semibold text-slate-700">Status Uji *</label>
+                <select id="status-uji" name="status_uji" required
+                        class="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30">
+                    @foreach ($statusOptions as $st)
+                        <option value="{{ $st }}">{{ $st }}</option>
+                    @endforeach
+                </select>
+                @error('status_uji')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
+            </div>
+            <div>
+                <label class="mb-1.5 block text-xs font-semibold text-slate-700">Catatan Kondisi <span class="font-normal text-slate-400">(opsional)</span></label>
+                <textarea id="status-catatan" name="catatan_kondisi" rows="3" placeholder="Catatan pengujian..."
+                          class="w-full rounded-lg border border-slate-200 px-3.5 py-2.5 text-sm outline-none focus:border-brand focus:ring-2 focus:ring-brand/30"></textarea>
+                @error('catatan_kondisi')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
+            </div>
+            <div class="flex justify-end gap-2">
+                <button type="button" data-close-modal class="rounded-lg border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50">Batal</button>
+                <button type="submit" class="rounded-lg bg-brand px-5 py-2 text-xs font-bold text-white transition hover:bg-brand-dark active:translate-y-px">Simpan Perubahan</button>
+            </div>
+        </form>
+    </div>
+</div>
+@endif
 @endsection
 
 @push('scripts')
@@ -358,13 +416,8 @@
     const storeBase = @json(route('data-sampels.store'));
     const updateUrl = id => storeBase + '/' + id;
 
-    function openModal(id) {
-        const el = document.getElementById(id);
-        if (el) { el.classList.remove('hidden'); el.classList.add('flex'); }
-    }
-    function closeModal(el) {
-        el.classList.add('hidden'); el.classList.remove('flex');
-    }
+    // Open/close is handled by the vanilla controller in app.js
+    // ([data-open-modal] / [data-close-modal] delegation).
     document.querySelectorAll('[data-open-modal]').forEach(btn => {
         btn.addEventListener('click', () => {
             const target = btn.getAttribute('data-open-modal');
@@ -400,38 +453,56 @@
                 document.getElementById('delete-kode').textContent = btn.dataset.kode || '';
                 document.getElementById('delete-nama').textContent = ' - ' + (btn.dataset.nama || '');
             }
-            openModal(target);
+            if (target === 'modal-status') {
+                document.getElementById('status-form').action = updateUrl(btn.dataset.id);
+                document.getElementById('status-id-field').value = btn.dataset.id;
+                document.getElementById('status-title-kode').textContent = btn.dataset.kode || '';
+                document.getElementById('status-uji').value = btn.dataset.status || '';
+                document.getElementById('status-catatan').value = btn.dataset.catatan || '';
+            }
         });
-    });
-    document.querySelectorAll('[data-close-modal]').forEach(btn => {
-        btn.addEventListener('click', () => closeModal(btn.closest('.fixed')));
-    });
-    document.querySelectorAll('.fixed[id^="modal-"]').forEach(m => {
-        m.addEventListener('click', e => { if (e.target === m) closeModal(m); });
-    });
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') document.querySelectorAll('.fixed[id^="modal-"]').forEach(closeModal);
     });
 
     @if ($errors->any())
         @if ($failedEditId)
-            (function () {
-                const row = document.querySelector('[data-open-modal="modal-edit"][data-id="{{ $failedEditId }}"]');
-                document.getElementById('edit-form').action = updateUrl('{{ $failedEditId }}');
-                document.getElementById('edit-id-field').value = '{{ $failedEditId }}';
-                document.getElementById('edit-kode').value = @json(old('kode_sampel', ''));
-                document.getElementById('edit-nama').value = @json(old('nama_sampel', ''));
-                document.getElementById('edit-jenis').value = @json(old('jenis_sampel', ''));
-                document.getElementById('edit-status').value = @json(old('status_uji', ''));
-                document.getElementById('edit-titik').value = @json(old('jumlah_titik', ''));
-                document.getElementById('edit-biaya').value = @json(old('biaya_per_titik', ''));
-                document.getElementById('edit-catatan').value = @json(old('catatan_kondisi', ''));
-                if (row) document.getElementById('edit-title-kode').textContent = row.dataset.kode || '';
-                openModal('modal-edit');
-            })();
-        @else
-            openModal('modal-create');
+            @if (auth()->user()->isStaff())
+                (function () {
+                    const row = document.querySelector('[data-open-modal="modal-status"][data-id="{{ $failedEditId }}"]');
+                    document.getElementById('status-form').action = updateUrl('{{ $failedEditId }}');
+                    document.getElementById('status-id-field').value = '{{ $failedEditId }}';
+                    document.getElementById('status-uji').value = @json(old('status_uji', ''));
+                    document.getElementById('status-catatan').value = @json(old('catatan_kondisi', ''));
+                    if (row) document.getElementById('status-title-kode').textContent = row.dataset.kode || '';
+                })();
+            @else
+                (function () {
+                    const row = document.querySelector('[data-open-modal="modal-edit"][data-id="{{ $failedEditId }}"]');
+                    document.getElementById('edit-form').action = updateUrl('{{ $failedEditId }}');
+                    document.getElementById('edit-id-field').value = '{{ $failedEditId }}';
+                    document.getElementById('edit-kode').value = @json(old('kode_sampel', ''));
+                    document.getElementById('edit-nama').value = @json(old('nama_sampel', ''));
+                    document.getElementById('edit-jenis').value = @json(old('jenis_sampel', ''));
+                    document.getElementById('edit-status').value = @json(old('status_uji', ''));
+                    document.getElementById('edit-titik').value = @json(old('jumlah_titik', ''));
+                    document.getElementById('edit-biaya').value = @json(old('biaya_per_titik', ''));
+                    document.getElementById('edit-catatan').value = @json(old('catatan_kondisi', ''));
+                    if (row) document.getElementById('edit-title-kode').textContent = row.dataset.kode || '';
+                })();
+            @endif
         @endif
+        // Reopen the right modal. Deferred to DOMContentLoaded so the
+        // vanilla controller in app.js (a deferred module) is ready.
+        window.addEventListener('DOMContentLoaded', () => {
+            @if ($failedEditId)
+                @if (auth()->user()->isStaff())
+                    window.EnvLabModal.open('modal-status');
+                @else
+                    window.EnvLabModal.open('modal-edit');
+                @endif
+            @else
+                window.EnvLabModal.open('modal-create');
+            @endif
+        });
     @endif
 })();
 </script>
