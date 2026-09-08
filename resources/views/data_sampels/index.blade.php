@@ -114,6 +114,7 @@
                                     data-jenis="{{ $s->jenis_sampel }}"
                                     data-titik="{{ $s->jumlah_titik }}"
                                     data-biaya="{{ $s->biaya_per_titik }}"
+                                    data-biaya-formatted="{{ Rupiah::format($s->biaya_per_titik) }}"
                                     data-total="{{ Rupiah::format($s->jumlah_titik * $s->biaya_per_titik) }}"
                                     data-status="{{ $s->status_uji }}"
                                     data-catatan="{{ $s->catatan_kondisi ?? '-' }}"
@@ -314,7 +315,25 @@
     </div>
 </div>
 
-<!-- ============ MODAL: SHOW ============ -->
+<!-- ============ MODAL: DELETE ============ -->
+<div id="modal-delete" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
+    <div class="w-full max-w-sm overflow-hidden rounded-lg bg-white">
+        <div class="px-6 py-5">
+            <h3 class="text-sm font-bold text-slate-800">Hapus sampel ini?</h3>
+            <p class="mt-2 text-sm text-slate-600"><span id="delete-kode" class="font-bold text-royal"></span> <span id="delete-nama" class="text-slate-500"></span></p>
+            <p class="mt-1 text-xs text-slate-400">Data yang dihapus tidak bisa dikembalikan.</p>
+            <form id="delete-form" method="POST" class="mt-4 flex justify-end gap-2">
+                @csrf
+                @method('DELETE')
+                <button type="button" data-close-modal class="rounded-lg border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50">Batal</button>
+                <button type="submit" class="rounded-lg bg-red-600 px-4 py-2 text-xs font-bold text-white transition hover:bg-red-700 active:translate-y-px">Ya, Hapus</button>
+            </form>
+        </div>
+    </div>
+</div>
+@endif
+
+<!-- ============ MODAL: SHOW (Detail) — shared for Admin & Staff ============ -->
 <div id="modal-show" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
     <div class="w-full max-w-lg overflow-hidden rounded-lg bg-white">
         <div class="flex items-center justify-between bg-royal px-6 py-4 text-white">
@@ -335,11 +354,11 @@
                 </div>
                 <div class="rounded-lg bg-slate-50 p-3">
                     <p class="text-[11px] text-slate-500">Biaya/Titik</p>
-                    <p id="show-biaya" class="text-lg font-bold text-royal"></p>
+                    <p id="show-biaya" class="text-sm font-bold text-royal"></p>
                 </div>
                 <div class="rounded-lg bg-brand/10 p-3">
                     <p class="text-[11px] text-slate-500">Total</p>
-                    <p id="show-total" class="text-lg font-bold text-emerald-700"></p>
+                    <p id="show-total" class="text-sm font-bold text-emerald-700"></p>
                 </div>
             </div>
             <div>
@@ -352,24 +371,6 @@
         </div>
     </div>
 </div>
-
-<!-- ============ MODAL: DELETE ============ -->
-<div id="modal-delete" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
-    <div class="w-full max-w-sm overflow-hidden rounded-lg bg-white">
-        <div class="px-6 py-5">
-            <h3 class="text-sm font-bold text-slate-800">Hapus sampel ini?</h3>
-            <p class="mt-2 text-sm text-slate-600"><span id="delete-kode" class="font-bold text-royal"></span> <span id="delete-nama" class="text-slate-500"></span></p>
-            <p class="mt-1 text-xs text-slate-400">Data yang dihapus tidak bisa dikembalikan.</p>
-            <form id="delete-form" method="POST" class="mt-4 flex justify-end gap-2">
-                @csrf
-                @method('DELETE')
-                <button type="button" data-close-modal class="rounded-lg border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50">Batal</button>
-                <button type="submit" class="rounded-lg bg-red-600 px-4 py-2 text-xs font-bold text-white transition hover:bg-red-700 active:translate-y-px">Ya, Hapus</button>
-            </form>
-        </div>
-    </div>
-</div>
-@endif
 
 @if (auth()->user()->isStaff())
 <!-- ============ MODAL: STATUS (Analyst) ============ -->
@@ -417,47 +418,62 @@
 
     // Open/close is handled by the vanilla controller in app.js
     // ([data-open-modal] / [data-close-modal] delegation).
+    // Note: modal-show is shared for Admin & Staff, while edit/delete
+    // only exist for Admin and status only for Staff — so guard lookups.
+    const setText = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+    };
+    const setValue = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.value = value;
+    };
     document.querySelectorAll('[data-open-modal]').forEach(btn => {
         btn.addEventListener('click', () => {
             const target = btn.getAttribute('data-open-modal');
             if (target === 'modal-edit') {
-                document.getElementById('edit-form').action = updateUrl(btn.dataset.id);
-                document.getElementById('edit-id-field').value = btn.dataset.id;
-                document.getElementById('edit-title-kode').textContent = btn.dataset.kode || '';
-                document.getElementById('edit-kode').value = btn.dataset.kode || '';
-                document.getElementById('edit-nama').value = btn.dataset.nama || '';
-                document.getElementById('edit-jenis').value = btn.dataset.jenis || '';
-                document.getElementById('edit-status').value = btn.dataset.status || '';
-                document.getElementById('edit-titik').value = btn.dataset.titik ?? '';
-                document.getElementById('edit-biaya').value = btn.dataset.biaya ?? '';
-                document.getElementById('edit-catatan').value = btn.dataset.catatan || '';
+                const form = document.getElementById('edit-form');
+                if (form) form.action = updateUrl(btn.dataset.id);
+                setValue('edit-id-field', btn.dataset.id);
+                setText('edit-title-kode', btn.dataset.kode || '');
+                setValue('edit-kode', btn.dataset.kode || '');
+                setValue('edit-nama', btn.dataset.nama || '');
+                setValue('edit-jenis', btn.dataset.jenis || '');
+                setValue('edit-status', btn.dataset.status || '');
+                setValue('edit-titik', btn.dataset.titik ?? '');
+                setValue('edit-biaya', btn.dataset.biaya ?? '');
+                setValue('edit-catatan', btn.dataset.catatan || '');
             }
             if (target === 'modal-show') {
-                document.getElementById('show-kode').textContent = btn.dataset.kode || '';
-                document.getElementById('show-nama').textContent = btn.dataset.nama || '';
-                document.getElementById('show-jenis').textContent = btn.dataset.jenis || '';
-                document.getElementById('show-titik').textContent = btn.dataset.titik || '';
-                document.getElementById('show-biaya').textContent = btn.dataset.biaya || '';
-                document.getElementById('show-total').textContent = btn.dataset.total || '';
-                document.getElementById('show-catatan').textContent = btn.dataset.catatan || '-';
+                setText('show-kode', btn.dataset.kode || '');
+                setText('show-nama', btn.dataset.nama || '');
+                setText('show-jenis', btn.dataset.jenis || '');
+                setText('show-titik', btn.dataset.titik || '');
+                setText('show-biaya', btn.dataset.biayaFormatted || btn.dataset.biaya || '');
+                setText('show-total', btn.dataset.total || '');
+                setText('show-catatan', btn.dataset.catatan || '-');
                 const badge = document.getElementById('show-status');
-                badge.textContent = btn.dataset.status || '';
-                badge.className = 'rounded-full px-2.5 py-1 text-xs font-semibold ' +
-                    (btn.dataset.status === 'Completed' ? 'bg-brand/15 text-emerald-700'
-                    : btn.dataset.status === 'In Analysis' ? 'bg-royal/10 text-royal'
-                    : 'bg-amber-100 text-amber-700');
+                if (badge) {
+                    badge.textContent = btn.dataset.status || '';
+                    badge.className = 'rounded-full px-2.5 py-1 text-xs font-semibold ' +
+                        (btn.dataset.status === 'Completed' ? 'bg-brand/15 text-emerald-700'
+                        : btn.dataset.status === 'In Analysis' ? 'bg-royal/10 text-royal'
+                        : 'bg-amber-100 text-amber-700');
+                }
             }
             if (target === 'modal-delete') {
-                document.getElementById('delete-form').action = updateUrl(btn.dataset.id);
-                document.getElementById('delete-kode').textContent = btn.dataset.kode || '';
-                document.getElementById('delete-nama').textContent = ' - ' + (btn.dataset.nama || '');
+                const form = document.getElementById('delete-form');
+                if (form) form.action = updateUrl(btn.dataset.id);
+                setText('delete-kode', btn.dataset.kode || '');
+                setText('delete-nama', ' - ' + (btn.dataset.nama || ''));
             }
             if (target === 'modal-status') {
-                document.getElementById('status-form').action = updateUrl(btn.dataset.id);
-                document.getElementById('status-id-field').value = btn.dataset.id;
-                document.getElementById('status-title-kode').textContent = btn.dataset.kode || '';
-                document.getElementById('status-uji').value = btn.dataset.status || '';
-                document.getElementById('status-catatan').value = btn.dataset.catatan || '';
+                const form = document.getElementById('status-form');
+                if (form) form.action = updateUrl(btn.dataset.id);
+                setValue('status-id-field', btn.dataset.id);
+                setText('status-title-kode', btn.dataset.kode || '');
+                setValue('status-uji', btn.dataset.status || '');
+                setValue('status-catatan', btn.dataset.catatan || '');
             }
         });
     });
