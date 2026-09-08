@@ -109,10 +109,6 @@ class DataSampelController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * Section 5, User Roles & Access Control: Analyst (Staff) may only
-     * update the analysis status and testing notes. Any other submitted
-     * fields are ignored for Staff, so they can never alter sample data.
      */
     public function update(Request $request, DataSampel $dataSampel)
     {
