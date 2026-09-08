@@ -48,7 +48,7 @@
     <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-5 py-4">
         <div>
             <h2 class="text-sm font-bold text-royal">Tabel Data Sampel</h2>
-            <p class="text-xs text-slate-500">Klik Lihat, Ubah, atau Hapus pada baris. Tidak ada halaman terpisah.</p>
+            <p class="text-xs text-slate-500">Klik Lihat, Ubah, atau Hapus pada baris.</p>
         </div>
         @if (auth()->user()->isAdmin())
             <button type="button" data-open-modal="modal-create"
@@ -182,7 +182,6 @@
     @endif
 </div>
 
-<!-- Create / full-edit / delete modals are Admin-only. -->
 @if (auth()->user()->isAdmin())
 <!-- ============ MODAL: CREATE ============ -->
 <div id="modal-create" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
